@@ -1,9 +1,17 @@
-# Best Practices for Project Organization in the Empirical Policy and Social Science Analhysis
-Shiro Kuriwaki (kuriwaki@g.harvard.edu)  
-`r Sys.Date()`  
+---
+title: "Best Practices for Project Organization in the Empirical Policy and Social Science Analhysis"
+author: "Shiro Kuriwaki (kuriwaki@g.harvard.edu)"
+date: '`r Sys.Date()`'
+output: 
+  html_vignette:
+    keep_md: true
+---
 
 
+```{r, include = FALSE}
+library(googlesheets)
 
+```
 
 
 > Saying [social science researchers] should spend more time thinking about the way they write code would be like telling a novelist that she should spend more time thinking about how best to use Microsoft Word.
@@ -149,8 +157,7 @@ You will be revising your analysis and writeup many more times than you anticipa
 
 For example, these lines of code reads in data from Google Sheets, formats it, and loads the necessary packages, and saves a figure of a printable size. 
 
-
-```r
+```{r, eval = FALSE}
 library(googlesheets)
 
 gapminder_sheet <- gs_gap()
@@ -173,8 +180,7 @@ ggsave("figures/gapminder_africa.pdf", width = 5, height = 3)
 
 
 Then, an text editor like Rmarkdown or LaTeX compiles a plain text file that embeds this Figure.
-
-```sh
+```{sh, eval = FALSE}
 Project Report
 ============
 Shiro Kuriwaki
@@ -199,15 +205,13 @@ Shiro Kuriwaki
 
 It is also normal for you to try something out and then do another version of that. Suppose that, in analyzing Brazilian municipality data, we want to generate a new variable that computes the difference in a municipality's literacy level with its state-average. In Stata you would try
 
-
-```sh
+```{sh, eval = FALSE}
  egen mean_literate91 = mean(literate91), by(state)
  generate relative_lit_state = mean_literate91  - literate
 ```
 
 and then look at a histogram,
-
-```sh
+```{sh, eval = FALSE}
 histogram relative_lit_state
 ```
 
@@ -215,8 +219,7 @@ histogram relative_lit_state
 Intrigued, suppose you want to do the same type of calculation but with a different variable, the poverty rate. A redundant but common next step is to copy-paste the two lines of code and make sure to replace the relevant parts:
 
 
-
-```sh
+```{sh, eval = FALSE}
  egen mean_poverty91 = mean(poverty91), by(state)
  generate relative_pov_state = mean_poverty91  - poverty91
  histogram relative_pov_state
@@ -226,8 +229,7 @@ Intrigued, suppose you want to do the same type of calculation but with a differ
 What about doing the same thing not by state, but by region? And so on and so on.. you end up with lines of code that is redundant in terms of the key operation (compute means, subtract the mean from the value); only the variables have changed. After a while, you get tired of copy-pasting and tediously editing so you stop analyzing the data and move out. Even worse, you make a copy-paste error and forget to swap a variable. 
 
 Here's where the abstraction via defining your own function becomes important:
-
-```sh
+```{sh, eval = FALSE}
 program hist_relative_rate
          syntax, invar(varname) outvar(name) byvar(varname)
          tempvar mean_invar
@@ -238,15 +240,13 @@ end
 ```
 
 Now we can do the same function with only one line of code!
-
-```sh
+```{sh, eval = FALSE}
 hist_relative_rate, invar(poverty80) outvar(relative_pov80_state) byvar(state)
 ```
 
 Moreover, repeating the same procedure with different variables requires you only write as many lines as there are different specifications, rather than having the extra `egen`. 
 
-
-```r
+```{r, eval = FALSE}
 hist_relative_rate, invar(poverty80) outvar(relative_pov80_state) byvar(state)
 hist_relative_rate, invar(poverty91) outvar(relative_pov91_state) byvar(state)
 hist_relative_rate, invar(poverty80) outvar(relative_pov80_region) byvar(region)
