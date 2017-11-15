@@ -1,0 +1,34 @@
+---
+title: "Project Report"
+author: "Shiro Kuriwaki"
+date: "`r Sys.Date()`"
+output: pdf_document
+header-includes:
+  - \usepackage{lipsum}
+---
+
+
+## Executive Overview
+The relationship between a country's economy and health outcomes is policy-relavent.
+
+\lipsum[1]
+
+## Data
+This report looks at 50 years worth of GDP and health-data in a panel of African countries. 
+
+\lipsum[2]
+
+## Method
+This report looks at 50 years worth of GDP and health-data in a panel of African countries. 
+
+
+## Results
+
+\lipsum[3-5]
+
+![Rwanda's Civil War led to a substnantial Drop in its Life Expectancy](figures/gapminder_africa.pdf)
+
+
+## Conclusion
+
+\lipsum[6]
