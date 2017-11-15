@@ -6,32 +6,34 @@ Shiro Kuriwaki (kuriwaki@g.harvard.edu)
 
 
 
-> Saying [social science researchers] should spend more time thinking about the way they write code would be like telling a novelist that she should spend more time thinking about how best to use Microsoft Word.
-> -- Gentzkow and Shapiro (2014)
+> Saying [social science researchers] should spend more time thinking about the way they write code would be like telling a novelist that she should spend more time thinking about how best to use Microsoft Word. 
+> .... This manual began with a growing sense that our own version of this self-taught seat-of-the-pants approach to computing was hitting its limits. 
+>                      --- Gentzkow and Shapiro (2014)
 
 
-This brief memo outlines one way to organize an empirical project in the Social Sciences, an area that is increasingly data-driven, program-driven, and collaborative. I rely most on the excellent writeup by economists Matthew Gentzkow and Jesse Shapiro, "Code and Data for the Social Sciences: A Practitioner’s Guide", as well as other resources that have established best practices. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.
+This brief memo outlines one way to organize an empirical project in policy analysis or the social sciences, an area that is increasingly data-driven, code-driven, and collaborative. I rely most on the excellent 2014 write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf), as well as other resources that have established best practices. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.
 
 (prepared for API 201-Z optional session )
 
 ## Motivation
 
-Learning how to write on new apps may sound like an optional hobby that "just" makes things look nice (as the opening quote indicates). That is only partially true -- good organization and the use of appropriate tools improve the quality of your work, and more prominently, reduce the number of errors you make, thereby optimizing on your time.
+Learning how to write on new apps may sound like a hobby that "just" makes things look nice (as the opening quote indicates). But I would argue that good organization and the use of appropriate tools improve the quality of your work, and more prominently, reduce the number of errors you make, thereby optimizing your time.
 
-The environment for data analysis and presentation is rapidly increasing. Only recently have we seen:
-- Many organizations handling __more data__ at cheaper cost
+All the more so given how the research environment is changing:
+
+- Many organizations now handling __more data__ at cheaper cost
 - Many data analysis and version control tools becoming __open source__
 - Online __collaboration__ becoming more prevalent
 - Computer science and statistics attracting more students
 
-and with these challenges come new tools to pick up.
+With these challenges come new tools to pick up.
 
 Learning these tricks is an investment, but a little training on well-tested best practices can go a long way.
 
 
 ## Original Principles by Gentzkow and Shapiro
 
-The recommendations by Gentzkow and Shapiro are central:
+The recommendations by Gentzkow and Shapiro are central worth r-posting:
 
 1. Automation
    * Automate everything that can be automated
@@ -122,7 +124,7 @@ A version of the above tailored to those whose main job is not research, but dat
 
    i) One message per figure/table
    ii) Maximize the data-ink ratio
-   iii) Drop unnnecessary digits
+   iii) Drop unnecessary digits
    iv) Modify aspect-ratios of figures
 
 11. Code style
@@ -146,7 +148,7 @@ A version of the above tailored to those whose main job is not research, but dat
    iii) Embed Figures and Tables to auto-update in your document
 
 
-You will be revising your analysis and writeup many more times than you anticipate. That's why short and automated code is essential. 
+You will be revising your analysis and write-up many more times than you anticipate. That's why short and automated code is essential. 
 
 For example, these lines of code reads in data from Google Sheets, formats it, and loads the necessary packages, and saves a figure of a printable size. 
 
@@ -177,21 +179,24 @@ ggsave("figures/gapminder_africa.pdf", width = 5, height = 3)
 
 Then, an text editor like Rmarkdown or LaTeX compiles a plain text file that embeds this Figure.
 
-```sh
+```md
 Project Report
-============
+================
 Shiro Kuriwaki
+`r Sys.Date()`
 
 # Introduction
+The relationship between a country's economy and health outcomes is policy-relavent.
 
 # Data
+This report looks at 50 years worth of GDP and health-data in a panel of African countries. 
 
-
-# Analysis
+# Results
 ![Rwanda's Civil War led to a substnantial Drop in its Life Expectancy](figures/gapminder_africa.pdf)
 
 ```
 
+See more on the Writing Software section below to see how this strip of text and symbols can produce a nice document.
 
 # Abstraction
 
@@ -320,7 +325,7 @@ gap_africa
 Note that in this case you need a key of two variables to uniquely identify a row -- `country` and `year`
 
 
-Large databases (e.g. in `SQL`) are organized in this way too -- each entry in a table (which can be tens of millions of rows) is identifiable by a unique identifier^[Ansolabehere and Hersh (2017), ``ADGN: An Algorithm for Record Linkage Using Address, Date of Birth, Gender and Name''. _Statistics and Public Policy_. http://amstat.tandfonline.com/doi/abs/10.1080/2330443X.2017.1389620#.WgvTIxOPLuA].
+Large corporate and government databases are organized in this way too -- each entry in a table (which can be tens of millions of rows) is identifiable by a unique identifier. Databases like credit card transactions and voter files are stored on servers and queried by languages like SQL. The critical link that makes all this data sensible is the unique identifier.
 
 
 ## Code
@@ -334,7 +339,7 @@ Long code (about ~300 lines or more) can get hard to scroll through. It probably
    ii) Code should be self-documenting.
 
 
-A common misperception is that one needs to annotate (a.k.a. "comment") code extensively to be helpful. While this is good in theory, it almost always fails to come through in practice. Analysts and programmers are humans, after all -- we fix typos in place without updating the documentation, we make changes on a whim and forget to get back to them, we copy and paste code from elsewhere along with the irrelevant comments, etc.. The lesson is to _embrace_ and adjust your code to this tendency, rather than setting yourself up for unrealistic levels of fastiduousness.
+A common misconception is that one needs to annotate (a.k.a. "comment") code extensively to be helpful. While this is good in theory, it almost always fails to come through in practice. Analysts and programmers are humans, after all -- we fix typos in place without updating the documentation, we make changes on a whim and forget to get back to them, we copy and paste code from elsewhere along with the irrelevant comments, etc.. The lesson is to _embrace_ and adjust your code to this tendency, rather than setting yourself up for unrealistic levels of fastidiousness.
 
 The Gentzkow and Shapiro example is excellent. What's wrong with this Stata code?
 
@@ -358,7 +363,7 @@ These four lines of notes are informative, but three days later after multiple s
   compute_welfare_loss, elasticity(3)
 ```
 
-Notice the elasticity in the notes are inconsisit with the ones in the values. Changing values like this happens out, but after a couple of days you won't remember whether your comment or your code is the newer version, and you are stuck.
+Notice the elasticity in the notes are inconsistent with the ones in the values. Changing values like this happens out, but after a couple of days you won't remember whether your comment or your code is the newer version, and you are stuck.
 
 
 
@@ -383,7 +388,7 @@ This is much better, because ``it has far less scope for internal inconsistency.
 ``E-mail is not a task management system''. There are plenty of Apps now that allow you to tag individuals with tasks, making individual responsibilities clear. Just to name a few: Asana, Slack, Dropbox Paper, Basecamp, Google Docs, ...
 
 
-A version control system, typically on Github, is a great way to keep track of your files without being overloaded with versions and versions of confusingly named files. This may be an advanced topic for an introduction to data analysis, but tutorials like https://try.github.io/ is a good start, and learning as you go is a valuable skillset.
+A version control system, typically on Github, is a great way to keep track of your files without being overloaded with versions and versions of confusingly named files. This may be an advanced topic for an introduction to data analysis, but tutorials like https://try.github.io/ is a good start, and learning as you go is a valuable skill-set.
 
 
 
@@ -391,13 +396,15 @@ A version control system, typically on Github, is a great way to keep track of y
 
 Data analytics -- both the datasets and the programs and functions that analyze them -- is increasingly open source. Posting your own code and findings on the public web is daunting at first, but it has a couple of benefits. Primarily, you learn how to code and analyze data through the best possible ways -- seeing others more advanced than you actually write code for the same type of problems.
 
+For example, see a version of the Directory Screenshot I posted at the Github page: https://github.com/kuriwaki/poll_error
+
 
 ##  Writing Software
    i) Use an editor you have the most control over (try something not WYSIWIG)
    
 WYSIWIG stands for "What you see is what you get", and software like Microsoft Office and Google Docs fall in this category. A non-WYSIWIG editor requires you to explicitly control your formatting (such as boldface, font size, margin size, Figure placement, captioning, etc..), often in plain-text. Plain text is just what it sounds like -- text files that have no formatting in them. Although they have different file extensions, `.Rmd`, `.do`, `.R`, is plain text.
 
-A good, "lightweight" non-WYSIWIG language is Markdown. The best interface for using Markdown with data I know is RMarkdown. That's how I made this document. To make my slides and notes, I also use a verison of Rmarkdown with a more involved typesetting engine called `TeX` underneath it. 
+A good, "lightweight" non-WYSIWIG language is Markdown. The best interface for using Markdown with data I know is RMarkdown. That's how I made this document. To make my slides and notes, I also use a version of Rmarkdown with a more involved typesetting engine called `TeX` underneath it. 
    
    
 
@@ -405,12 +412,112 @@ A good, "lightweight" non-WYSIWIG language is Markdown. The best interface for u
 
    i) One message per figure/table
    ii) Maximize the data-ink ratio
-   iii) Drop unnnecessary digits
+   iii) Drop unnecessary digits
    iv) Modify aspect-ratios of figures
    
-As you saw in the Anscombe dataset problem, making visualizations is key. In some disciplines it is not at all controversional to skim a paper or report by just reading the figures and tables, skipping the text.
+As you saw in the Anscombe dataset problem, making visualizations is key. In some disciplines it is not at all controversial to skim a paper or report by just reading the figures and tables, skipping the text.
+
+
+Edward Tufte's books and workshops is a classic in this area. If you don't have a copy, a talk by Jean-Luc Demont on making figures for slides to get the message across (and presentations more generally) is worth a try (https://www.youtube.com/watch?v=meBXuTIPJQk), as is John Rauser's talk on the general patterns of how we see -- and don't see -- visualizations (https://www.youtube.com/watch?v=fSgEeI2Xpdc)
+
+
+The data-ink principle is a good rule of thumb. Don't waste ink on information that is not actual information:
+![](figures/data-ink.gif)
+
+
+Once you've improved your data-ink ratio after removing clutter and redundancy, there still is the question of which of the many aspects to use when encoding data. There are different ways ("aesthetics" in `ggplot2`)  to show data, but Rauser's talk summarizes that you should follow the oder below (in descending order):
+
+1. **Position along a common scale**
+2. Position on identical but nonaligned scales
+3. Length
+4. Angle or Slope
+5. Area
+6. Volume or Density or Color saturation
+7. Color hue
+
+For example, this plot, which shows fuel efficiency on a common scale, 
+
+
+
+```r
+ggplot(mtcars, aes(x = fct_inorder(name), y = mpg)) + 
+  geom_point() +
+  coord_flip() +
+  labs(x = "Car", y = "Miles per Gallon")
+```
+
+![](project-organization_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+
+
+This is much easier to read than encoding the MPG values as color saturation. The figure below is the exact same data points, but just using a different aspect/aesthetic.
+
+![](project-organization_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+
+
+Generally for coding but especially for things like figures and tables -- if you are thinking of something that would be "nice to have", then someone else has thought of it for you already. For example, there are built in color themes in Stata and R, way to format regressions into tables, etc..
+
+
+For example, 
+
+
+```sh
+set scheme s2mono, permanently
+```
+in Stata changes the color scheme from the jarring blue-olive-green-white to a calmer gray-scale. 
+
+![](figures/stata_schemes.png)
+
+
+and packages such as R's `stargazer` format regressions nicely with a couple of customizable options.
+
+
+
+```r
+library(stargazer)
+fit <- lm(lifeExp ~ log(pop) + log(gdpPercap), gap_africa)
+```
+
+
+```r
+stargazer(fit, 
+          type = "text", 
+          digits = 2, 
+          covariate.labels = c("log Population", "log GDP per Capita"),
+          dep.var.labels = "Life Expectancy", 
+          keep.stat = c("n", "rsq"))
+```
+
+```
+## 
+## ==============================================
+##                        Dependent variable:    
+##                    ---------------------------
+##                          Life Expectancy      
+## ----------------------------------------------
+## log Population               0.67***          
+##                              (0.21)           
+##                                               
+## log GDP per Capita           5.81***          
+##                              (0.36)           
+##                                               
+## Constant                      -3.37           
+##                              (4.26)           
+##                                               
+## ----------------------------------------------
+## Observations                   624            
+## R2                            0.30            
+## ==============================================
+## Note:              *p<0.1; **p<0.05; ***p<0.01
+```
+
+
+
+
+
+
 
 ## Code style
+
    i) Use descriptive names
    ii) Don't repeat code more than twice
    iii) Keep it short and purposeful
@@ -419,13 +526,13 @@ As you saw in the Anscombe dataset problem, making visualizations is key. In som
    vi) Write tests
 
 
-Small things can help you focus on the more important things.  Karl Broman's writeup of this, focused on spreadsheet data, is excellent. https://github.com/kbroman/Paper_DataOrg/blob/master/manuscript.md
+Small things can help you focus on the more important things.  Karl Broman's write-up of this, focused on spreadsheet data, is excellent. https://github.com/kbroman/Paper_DataOrg/blob/master/manuscript.md
 
 Once you decide on a capitalization method, stick to it. Don't name one thing `FigureAfrica.pdf`, another file `Asia_Figure`, and then another `fig-europe`. Stay consistent in your use of capitalization, ordering of terms, and uses of dashes vs. underscores.
 
 For files starting with number for ordering, consider padding a `0` in front of single digits so that `09_file.R` comes before `10_file.R`, not after.
 
-It's also good to stick to a consistent way of referring to dates in your filenames and code, and preferably a standard one. As Karl Broman writes, "If sometimes you write `8/1/2015`
+It's also good to stick to a consistent way of referring to dates in your file names and code, and preferably a standard one. As Karl Broman writes, "If sometimes you write `8/1/2015`
 and sometimes `8-1-15`, it will be more difficult to use the dates in
 analyses or data visualizations."
 
@@ -435,3 +542,12 @@ analyses or data visualizations."
 ##  Typesetting
    i) Use generous margins
    ii) Use a consistent font
+
+
+## Conclusion
+
+Some general things I tried to convey
+
+- **Good design** and good organization leads to **good quality**
+- Most of the recommendations are not arbitrary, "artistic", or simply trendy. Good recommendations are instead **backed by** years of other professional's experience, human psychology, or computer science research. Don't re-invent the wheel.
+- The best way to learn is to get your hands dirty and learn from others!
