@@ -1,4 +1,4 @@
-# Best Practices for Project Organization in the Empirical Policy and Social Science Analhysis
+# Best Practices for Empirical Projects
 Shiro Kuriwaki (kuriwaki@g.harvard.edu)  
 `r Sys.Date()`  
 
@@ -11,10 +11,10 @@ Shiro Kuriwaki (kuriwaki@g.harvard.edu)
 >                      --- Gentzkow and Shapiro (2014)
 
 
-This brief memo outlines one way to organize an empirical project in policy analysis or the social sciences, an area that is increasingly data-driven, code-driven, and collaborative. I rely most on the excellent 2014 write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf). Many of the principles I describe are taken verbatim from that paper. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.
+This brief memo outlines one way to organize an empirical project in policy analysis or the social science -- AN area that is increasingly data-driven, code-driven, and collaborative. I rely most on the excellent 2014 write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf). Many of the principles I describe are taken verbatim from that paper. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.
 
 
-(prepared for API 201-Z optional session )
+(Note: This version was prepared for Harvard Kennedy School API 201-Z session. Its repo is https://github.com/kuriwaki/project-org)
 
 ## Motivation
 
@@ -179,6 +179,7 @@ For example, these lines of code reads in data from Google Sheets, formats it, a
 
 
 ```r
+library(tidyverse)
 library(googlesheets)
 
 gapminder_sheet <- gs_gap()
@@ -190,12 +191,12 @@ gap_africa$log_gdppercap <- log(gap_africa$gdpPercap)
 
 ggplot(gap_africa, aes(x = log_gdppercap, y = lifeExp, size = pop)) +
   facet_wrap(~year, nrow = 2) +
-  geom_point() +
+  geom_point(alpha = 0.7) +
   geom_label(data = filter(gap_africa, country %in% "Rwanda"), aes(label = country)) +
   guides(size = FALSE) +
   labs(x = "log GDP per Capita", y = "Average Life Expectancy")
 
-ggsave("figures/gapminder_africa.pdf", width = 5, height = 3)
+ggsave("figures/gapminder_africa.pdf", width = 8, height = 4)
 ```
 
 
@@ -205,20 +206,21 @@ ggsave("figures/gapminder_africa.pdf", width = 5, height = 3)
 Then, an text editor like Rmarkdown or LaTeX compiles a plain text file that embeds this Figure.
 
 ```md
-Project Report
-================
-Shiro Kuriwaki
-`r Sys.Date()`
+---
+title: "Project Report"
+author: "Shiro Kuriwaki"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
 
-# Introduction
+## Introduction
 The relationship between a country's economy and health outcomes is policy-relavent.
 
-# Data
+## Data
 This report looks at 50 years worth of GDP and health-data in a panel of African countries. 
 
-# Results
+## Results
 ![Rwanda's Civil War led to a substnantial Drop in its Life Expectancy](figures/gapminder_africa.pdf)
-
 ```
 
 See more on the Writing Software section below to see how this strip of text and symbols can produce a nice document.
@@ -259,7 +261,7 @@ What about doing the same thing not by state, but by region? And so on and so on
 
 Here's where the abstraction via defining your own function becomes important:
 
-```sh
+```text
 program hist_relative_rate
          syntax, invar(varname) outvar(name) byvar(varname)
          tempvar mean_invar
@@ -292,12 +294,12 @@ Not only is this fewer keystrokes, it is much more **readable**. It is clear wha
    ii) Code should be self-documenting.
 
 
-A common misconception is that one needs to annotate (a.k.a. "comment") code extensively to be helpful. While this is good in theory, it almost always fails to come through in practice. Analysts and programmers are humans, after all -- we fix typos in place without updating the documentation, we make changes on a whim and forget to get back to them, we copy and paste code from elsewhere along with the irrelevant comments, etc.. The lesson is to _embrace_ and adjust your code to this tendency, rather than setting yourself up for unrealistic levels of fastidiousness.
+A common misconception is that one needs to annotate (a.k.a. "comment") code extensively to be helpful. While this is good in theory, it almost always fails to come through in practice. Analysts and programmers are humans, after all -- we fix typos in place without updating the documentation, we make changes on a whim and forget to get back to them, we copy and paste code from elsewhere along with the irrelevant comments, etc.. The lesson is to _embrace_ and adjust your code to prepare for those mistakes, rather than setting yourself up for unrealistic fastidiousness.
 
 The Gentzkow and Shapiro example is excellent. What's wrong with this Stata code?
 
 
-```sh
+```fortran
 * Elasticity = Percent Change in Quantity / Percent Change in Price
 * Elasticity = 0.4 / 0.2 = 2
 * See Shapiro (2005), The Economics of Potato Chips,
@@ -308,7 +310,7 @@ The Gentzkow and Shapiro example is excellent. What's wrong with this Stata code
 These four lines of notes are informative, but three days later after multiple stages of editing, you're bound to see something like this:
 
 
-```sh
+```fortran
 * Elasticity = Percent Change in Quantity / Percent Change in Price
 * Elasticity = 0.4 / 0.2 = 2
 * See Shapiro (2005), The Economics of Potato Chips,
@@ -320,13 +322,13 @@ Notice the elasticity in the notes are inconsistent with the ones in the values.
 
 
 
-```sh
+```fortran
 * See Shapiro (2005), The Economics of Potato Chips,
 * Harvard University Mimeo, Table 2A.
 local percent_change_in_quantity = -0.4
 local percent_change_in_price = 0.2
 local elasticity = `percent_change_in_quantity'/`percent_change_in_price'
-compute_welfare_loss, elasticity(`elasticity')
+ compute_welfare_loss, elasticity(`elasticity')
 ```
 
 This is much better, because ``it has far less scope for internal inconsistency. You can’t change the percent change in quantity without also changing the elasticity, and you can’t get a different elasticity number with these percent changes.''
@@ -351,7 +353,7 @@ notice that
 
 1. There is one "project directory", which may be a Dropbox folder for a shared project,
 2. That folder has `build` and `analyze` folders, which are verbs, not nouns,
-3. Within each folder the subfolders are exactly parallel
+3. Within each folder the sub-folders are exactly parallel
 4. The sequence is clear: build, then analyze. Input, then output.
 5. Anything in `input` **should not be overwritten**
 6. Anything in `output` should be **reproducible by the code**
@@ -360,7 +362,7 @@ notice that
 What about within each directory? Long code (about ~300 lines or more) can get hard to scroll through. It probably makes your life easier to split your code up into separate parts. (`read`, `clean`, `deduplicate`, `merge`, for example.)
 
 
-Whether or not to maintain a strict difference between `build` and `analyze`, even to the point of having a separate `data` subfolder for each, can be debatable. For example my directory for one project looks like:
+Whether or not to maintain a strict difference between `build` and `analyze`, even to the point of having a separate `data` sub-folder for each, can be debatable. For example my directory for one project looks like:
 
 ![data directory divided into input and output](figures/directory_example.png)
 
@@ -449,10 +451,12 @@ A good, "lightweight" non-WYSIWIG language is Markdown. The best interface for u
 As you saw in the Anscombe dataset problem, making visualizations is key to data analysis, not just a cute trick. In some disciplines it is not at all controversial to skim a paper or report by just reading the figures and tables, skipping the text.
 
 
-Edward Tufte's books and workshops is a classic in this area. If you don't have a copy, a talk by Jean-Luc Demont on making figures for slides to get the message across (and presentations more generally) is worth a try (https://www.youtube.com/watch?v=meBXuTIPJQk), as is John Rauser's talk on the general patterns of how we see -- and don't see -- visualizations (https://www.youtube.com/watch?v=fSgEeI2Xpdc)
+Edward Tufte's books and workshops is a classic in this area. If you don't have a copy, a talk by Jean-Luc Demont on making figures for slides to get the message across (and presentations more generally) is worth a try (https://www.youtube.com/watch?v=meBXuTIPJQk). 
+
+John Rauser's talk on the general patterns of how we see -- and don't see -- visualizations is also clarifying (https://www.youtube.com/watch?v=fSgEeI2Xpdc)
 
 
-The data-ink principle is a good rule of thumb. Don't waste ink on information that is not actual information:
+The data-ink ratio principle is a good rule of thumb. Don't waste ink on things that is not actual information:
 ![](figures/data-ink.gif)
 
 
@@ -589,7 +593,7 @@ As Phil Karlton reportedly said, "There are only two hard things in Computer Sci
 
 "Descriptive" names rules out things like `model1`, `model2`, `model3`, or `data`, `fig`, or `project`. Instead, include a couple of letters to clarify what the content is. It is ok to put numbers especially if the objects should be ordered, but the number shouldn't be the only indicator in the filename.  Name things is actually hard because while descriptive names are good, they need to be short. So `model_2017-11-15_ols_cancer_all-controls` is too long, so you want a way to abbreviate it while still maintaining meaning.
 
-As we saw in the Abstraction section, avoid repetion. Instead of 
+As we saw in the Abstraction section, avoid repetition. Instead of 
 
 ```sh
 tabstat lifeexp_1982
@@ -605,9 +609,6 @@ Learn about regular expressions to do this in one line.
 ```sh
 tabstat lifeexp*
 ```
-
-
-
 
 
 Small things can help you focus on the more important things.  Karl Broman's write-up of this, focused on spreadsheet data, is excellent. https://github.com/kbroman/Paper_DataOrg/blob/master/manuscript.md
@@ -635,3 +636,4 @@ Some general things I tried to convey in this memo:
 - **Good design** and good organization leads to **good quality**
 - Most of the recommendations are not arbitrary, "artistic", or simply trendy. Good recommendations are instead **backed by** years of other professional's experience, human psychology, or computer science research. Don't re-invent the wheel.
 - The best way to learn is to get your hands dirty and learn from others!
+
