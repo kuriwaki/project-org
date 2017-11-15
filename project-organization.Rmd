@@ -10,6 +10,9 @@ output:
 
 ```{r, include = FALSE}
 library(googlesheets)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
 
 ```
 
@@ -83,7 +86,7 @@ The recommendations by Gentzkow and Shapiro are central:
 
 A version of the above tailored to those whose main job is not research, but data analysis.
 
-## Priniciples
+### Priniciples
 
 1. Automation
    i) Automate everything that can be automated
@@ -95,7 +98,7 @@ A version of the above tailored to those whose main job is not research, but dat
    ii) Abstract to improve clarity.
    iii) Otherwise, don’t abstract.
 
-## Organization
+### Organization
 
 3. Directories (Folder Structure)
    i) Separate directories by function
@@ -108,7 +111,7 @@ A version of the above tailored to those whose main job is not research, but dat
 5. Code organization
    i) One script for one step (build, analyze, figures)
 
-## Management
+### Management
 
 6. Documentation
    i) Don’t write documentation you will not maintain.
@@ -116,13 +119,13 @@ A version of the above tailored to those whose main job is not research, but dat
 
 7. Management
    i) Manage tasks with a task management system.
-   ii) E-mail is not _the best_ task management system: Git is the best, with a middle-ground with Dropbox Paper, Tasks in Google Docs, Slack.
+   ii) E-mail is not _the best_ task management system.
    iii) Use a version control system
 
 8. Open-sourcing
    i) Consider Open-sourcing your datasets, figures, or code
 
-## Production
+### Production
 9. Writing Software
    i) Use an editor you have the most control over (preferably not WYSIWIG)
 
@@ -146,6 +149,7 @@ A version of the above tailored to those whose main job is not research, but dat
    ii) Use a consistent font
 
 
+
 ## Automation
 
    i) Automate everything that can be automated
@@ -161,21 +165,31 @@ For example, these lines of code reads in data from Google Sheets, formats it, a
 library(googlesheets)
 
 gapminder_sheet <- gs_gap()
-df <- gs_read(gapminder_sheet, ws = "Africa", col_types = cols())
+gap_africa <- gs_read(gapminder_sheet, ws = "Africa", col_types = cols())
 
-# look at data
-glimpse(df)
+glimpse(gap_africa)
 
-df$log_gdppercap <- log(df$gdpPercap)
+gap_africa$log_gdppercap <- log(gap_africa$gdpPercap)
 
-ggplot(df, aes(x = log_gdppercap, y = lifeExp, size = pop)) +
+ggplot(gap_africa, aes(x = log_gdppercap, y = lifeExp, size = pop)) +
   facet_wrap(~year, nrow = 2) +
   geom_point() +
-  geom_label(data = filter(df, country %in% "Rwanda"), aes(label = country)) +
+  geom_label(data = filter(gap_africa, country %in% "Rwanda"), aes(label = country)) +
   guides(size = FALSE) +
   labs(x = "log GDP per Capita", y = "Average Life Expectancy")
 
 ggsave("figures/gapminder_africa.pdf", width = 5, height = 3)
+
+```
+
+
+```{r, echo = FALSE, include=FALSE}
+gapminder_sheet <- gs_gap()
+gap_africa <- gs_read(gapminder_sheet, ws = "Africa", col_types = cols())
+
+glimpse(gap_africa)
+
+gap_africa$log_gdppercap <- log(gap_africa$gdpPercap)
 ```
 
 
@@ -254,3 +268,170 @@ hist_relative_rate, invar(poverty80) outvar(relative_pov80_region) byvar(region)
 
 
 Not only is this fewer keystrokes, it is much more **readable**. It is clear what the function `hist_relative_rate` is essentially doing, whereas understanding three lines takes more time than people have time for. We'll see later that adding comments to this code is also not a great idea, because that documentation can quickly become deprecated.
+
+
+# Directories
+
+   i) Separate directories by function
+   ii) Separate files into inputs and outputs
+   iii) Make directories portable
+   
+
+Directories are just a computer engineering name for folders. Being told how to organize folders may seem pedantic at first, but this habit-forming practice is pretty consequential for all the work that you do later. And especially if you are collaborating with others, using well-established practices save you a lot of confusion and errors. 
+
+Copying directly from Gentzkow and Shapiro,
+
+![A template for your project folder](figures/GS_directory.png)
+
+notice that
+
+1. There is one "project directory", which may be a Dropbox folder for a shared project,
+2. That folder has `build` and `analyze` folders, which are verbs, not nouns,
+3. Within each folder the subfolders are exactly parallel
+4. The sequence is clear: build, then analyze. Input, then output.
+5. Anything in `input` **should not be overwritten**
+6. Anything in `output` should be **reproducible by the code**
+
+
+Whether or not to maintain a strict difference between `build` and `analyze`, even to the point of having a separate `data` subfolder for each, can be debatable. For example my directory for one project looks like:
+
+![data directory divided into input and output](figures/directory_example.png)
+
+Breaking out of old habits are hard, but give this a try. The hope is that this will become natural as you use it.
+
+
+## Datasets
+
+Building your own dataset is an intermediate/advanced-level skill. But it is the bread and butter of data analysis in the type of work Gentzkow and Shapiro do. A lot of the power in data analysis comes from merging, and setting "keys" -- unique identifiers is a principle that makes this possible. 
+
+The concept of keys is also critical when discussing data because it is the database equivalent of asking what your **unit of analysis** is.
+
+For example, in the gapminder dataset, what is the key?
+```{r}
+gap_africa
+```
+Note that in this case you need a key of two variables to uniquely identify a row -- `country` and `year`
+
+
+Large databases (e.g. in `SQL`) are organized in this way too -- each entry in a table (which can be tens of millions of rows) is identifiable by a unique identifier^[Ansolabehere and Hersh (2017), ``ADGN: An Algorithm for Record Linkage Using Address, Date of Birth, Gender and Name''. _Statistics and Public Policy_. http://amstat.tandfonline.com/doi/abs/10.1080/2330443X.2017.1389620#.WgvTIxOPLuA].
+
+
+## Code
+
+Long code (about ~300 lines or more) can get hard to scroll through. It probably makes your life easier to split your code up into separate parts. (`read`, `clean`, `deduplicate`, `merge`, for example.)
+
+
+## Documentation
+
+   i) Don’t write documentation you will not maintain.
+   ii) Code should be self-documenting.
+
+
+A common misperception is that one needs to annotate (a.k.a. "comment") code extensively to be helpful. While this is good in theory, it almost always fails to come through in practice. Analysts and programmers are humans, after all -- we fix typos in place without updating the documentation, we make changes on a whim and forget to get back to them, we copy and paste code from elsewhere along with the irrelevant comments, etc.. The lesson is to _embrace_ and adjust your code to this tendency, rather than setting yourself up for unrealistic levels of fastiduousness.
+
+The Gentzkow and Shapiro example is excellent. What's wrong with this Stata code?
+
+```{sh, eval= FALSE}
+* Elasticity = Percent Change in Quantity / Percent Change in Price
+* Elasticity = 0.4 / 0.2 = 2
+* See Shapiro (2005), The Economics of Potato Chips,
+* Harvard University Mimeo, Table 2A.
+ compute_welfare_loss, elasticity(2)
+```
+
+These four lines of notes are informative, but three days later after multiple stages of editing, you're bound to see something like this:
+
+```{sh, eval=FALSE}
+* Elasticity = Percent Change in Quantity / Percent Change in Price
+* Elasticity = 0.4 / 0.2 = 2
+* See Shapiro (2005), The Economics of Potato Chips,
+* Harvard University Mimeo, Table 2A.
+  compute_welfare_loss, elasticity(3)
+```
+
+Notice the elasticity in the notes are inconsisit with the ones in the values. Changing values like this happens out, but after a couple of days you won't remember whether your comment or your code is the newer version, and you are stuck.
+
+
+```{sh, eval = FALSE}
+* See Shapiro (2005), The Economics of Potato Chips,
+* Harvard University Mimeo, Table 2A.
+local percent_change_in_quantity = -0.4
+local percent_change_in_price = 0.2
+local elasticity = `percent_change_in_quantity'/`percent_change_in_price'
+compute_welfare_loss, elasticity(`elasticity')
+```
+
+This is much better, because ``it has far less scope for internal inconsistency. You can’t change the percent change in quantity without also changing the elasticity, and you can’t get a different elasticity number with these percent changes.''
+
+
+## Task and Version Management
+
+   i) Manage tasks with a task management system.
+   ii) E-mail is not _the best_ task management system.
+   iii) Use a version control system
+
+``E-mail is not a task management system''. There are plenty of Apps now that allow you to tag individuals with tasks, making individual responsibilities clear. Just to name a few: Asana, Slack, Dropbox Paper, Basecamp, Google Docs, ...
+
+
+A version control system, typically on Github, is a great way to keep track of your files without being overloaded with versions and versions of confusingly named files. This may be an advanced topic for an introduction to data analysis, but tutorials like https://try.github.io/ is a good start, and learning as you go is a valuable skillset.
+
+
+
+## Open-sourcing
+
+Data analytics -- both the datasets and the programs and functions that analyze them -- is increasingly open source. Posting your own code and findings on the public web is daunting at first, but it has a couple of benefits. Primarily, you learn how to code and analyze data through the best possible ways -- seeing others more advanced than you actually write code for the same type of problems.
+
+
+##  Writing Software
+   i) Use an editor you have the most control over (try something not WYSIWIG)
+   
+WYSIWIG stands for "What you see is what you get", and software like Microsoft Office and Google Docs fall in this category. A non-WYSIWIG editor requires you to explicitly control your formatting (such as boldface, font size, margin size, Figure placement, captioning, etc..), often in plain-text. Plain text is just what it sounds like -- text files that have no formatting in them. Although they have different file extensions, `.Rmd`, `.do`, `.R`, is plain text.
+
+A good, "lightweight" non-WYSIWIG language is Markdown. The best interface for using Markdown with data I know is RMarkdown. That's how I made this document. To make my slides and notes, I also use a verison of Rmarkdown with a more involved typesetting engine called `TeX` underneath it. 
+   
+   
+
+## Figures and Tables
+
+   i) One message per figure/table
+   ii) Maximize the data-ink ratio
+   iii) Drop unnnecessary digits
+   iv) Modify aspect-ratios of figures
+   
+As you saw in the Anscombe dataset problem, making visualizations is key. In some disciplines it is not at all controversional to skim a paper or report by just reading the figures and tables, skipping the text.
+
+
+Edward Tufte's books and workshops is a classic in this area. If you don't have a copy, a talk by Jean-Luc Demont on making figures for slides to get the message across (and presentations more generally) is worth a try (https://www.youtube.com/watch?v=meBXuTIPJQk), as is the  
+
+
+
+The data-ink principle is a good rule of thumb. Don't waste ink on information that is not actual information:
+![](figures/data-ink.gif)
+
+
+
+## Code style
+   i) Use descriptive names
+   ii) Don't repeat code more than twice
+   iii) Keep it short and purposeful
+   iv) Make your functions shy
+   v) Be consistent
+   vi) Write tests
+
+
+Small things can help you focus on the more important things.  Karl Broman's writeup of this, focused on spreadsheet data, is excellent. https://github.com/kbroman/Paper_DataOrg/blob/master/manuscript.md
+
+Once you decide on a capitalization method, stick to it. Don't name one thing `FigureAfrica.pdf`, another file `Asia_Figure`, and then another `fig-europe`. Stay consistent in your use of capitalization, ordering of terms, and uses of dashes vs. underscores.
+
+For files starting with number for ordering, consider padding a `0` in front of single digits so that `09_file.R` comes before `10_file.R`, not after.
+
+It's also good to stick to a consistent way of referring to dates in your filenames and code, and preferably a standard one. As Karl Broman writes, "If sometimes you write `8/1/2015`
+and sometimes `8-1-15`, it will be more difficult to use the dates in
+analyses or data visualizations."
+
+![](https://imgs.xkcd.com/comics/iso_8601.png)
+
+
+##  Typesetting
+   i) Use generous margins
+   ii) Use a consistent font
