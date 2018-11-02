@@ -1,5 +1,5 @@
 ---
-title: "Best Practices for Empirical Projects"
+title: "Best Practices for Data Projects"
 author: "Shiro Kuriwaki (kuriwaki@g.harvard.edu)"
 date: '`r Sys.Date()`'
 output: 
@@ -10,11 +10,8 @@ output:
 
 ```{r, include = FALSE}
 library(googlesheets)
-library(ggplot2)
-library(dplyr)
 library(tidyverse)
 library(glue)
-library(readr)
 ```
 
 
@@ -25,8 +22,6 @@ library(readr)
 
 This brief memo outlines one way to organize an empirical project in policy analysis or the social science -- AN area that is increasingly data-driven, code-driven, and collaborative. I rely most on the excellent 2014 write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf). Many of the principles I describe are taken verbatim from that paper. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.
 
-
-(Note: This version was prepared for Harvard Kennedy School API 201-Z session. Its repo is https://github.com/kuriwaki/project-org)
 
 ## Motivation
 
@@ -193,14 +188,15 @@ For example, these lines of code reads in data from Google Sheets, formats it, a
 library(tidyverse)
 library(googlesheets)
 
+# read data (here from google sheets)
 gapminder_sheet <- gs_gap()
-gap_africa <- gs_read(gapminder_sheet, ws = "Africa", col_types = cols())
+gap_africa <- gs_read(gapminder_sheet, ws = "Africa")
 
-glimpse(gap_africa)
 
-gap_africa$log_gdppercap <- log(gap_africa$gdpPercap)
 
-ggplot(gap_africa, aes(x = log_gdppercap, y = lifeExp, size = pop)) +
+gap_africa <- mutate(gap_africa,  log_gdppc = log(gdpPercap))
+
+ggplot(gap_africa, aes(x = log_gdppc, y = lifeExp, size = pop)) +
   facet_wrap(~year, nrow = 2) +
   geom_point(alpha = 0.7) +
   geom_label(data = filter(gap_africa, country %in% "Rwanda"), aes(label = country)) +
@@ -231,12 +227,15 @@ output: pdf_document
 ---
 
 ## Introduction
+  
 The relationship between a country's economy and health outcomes is policy-relavent.
 
 ## Data
+
 This report looks at 50 years worth of GDP and health-data in a panel of African countries. 
 
 ## Results
+
 ![Rwanda's Civil War led to a substnantial Drop in its Life Expectancy](figures/gapminder_africa.pdf)
 ```
 

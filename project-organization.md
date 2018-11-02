@@ -1,6 +1,11 @@
-# Best Practices for Empirical Projects
-Shiro Kuriwaki (kuriwaki@g.harvard.edu)  
-`r Sys.Date()`  
+---
+title: "Best Practices for Data Projects"
+author: "Shiro Kuriwaki (kuriwaki@g.harvard.edu)"
+date: '2018-11-01'
+output: 
+  html_vignette:
+    keep_md: true
+---
 
 
 
@@ -13,8 +18,6 @@ Shiro Kuriwaki (kuriwaki@g.harvard.edu)
 
 This brief memo outlines one way to organize an empirical project in policy analysis or the social science -- AN area that is increasingly data-driven, code-driven, and collaborative. I rely most on the excellent 2014 write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf). Many of the principles I describe are taken verbatim from that paper. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.
 
-
-(Note: This version was prepared for Harvard Kennedy School API 201-Z session. Its repo is https://github.com/kuriwaki/project-org)
 
 ## Motivation
 
@@ -182,14 +185,15 @@ For example, these lines of code reads in data from Google Sheets, formats it, a
 library(tidyverse)
 library(googlesheets)
 
+# read data (here from google sheets)
 gapminder_sheet <- gs_gap()
-gap_africa <- gs_read(gapminder_sheet, ws = "Africa", col_types = cols())
+gap_africa <- gs_read(gapminder_sheet, ws = "Africa")
 
-glimpse(gap_africa)
 
-gap_africa$log_gdppercap <- log(gap_africa$gdpPercap)
 
-ggplot(gap_africa, aes(x = log_gdppercap, y = lifeExp, size = pop)) +
+gap_africa <- mutate(gap_africa,  log_gdppc = log(gdpPercap))
+
+ggplot(gap_africa, aes(x = log_gdppc, y = lifeExp, size = pop)) +
   facet_wrap(~year, nrow = 2) +
   geom_point(alpha = 0.7) +
   geom_label(data = filter(gap_africa, country %in% "Rwanda"), aes(label = country)) +
@@ -214,12 +218,15 @@ output: pdf_document
 ---
 
 ## Introduction
+  
 The relationship between a country's economy and health outcomes is policy-relavent.
 
 ## Data
+
 This report looks at 50 years worth of GDP and health-data in a panel of African countries. 
 
 ## Results
+
 ![Rwanda's Civil War led to a substnantial Drop in its Life Expectancy](figures/gapminder_africa.pdf)
 ```
 
@@ -390,17 +397,17 @@ gap_africa
 ```
 ## # A tibble: 624 x 7
 ##    country continent  year lifeExp      pop gdpPercap log_gdppercap
-##      <chr>     <chr> <int>   <dbl>    <int>     <dbl>         <dbl>
-##  1 Algeria    Africa  1952  43.077  9279525  2449.008      7.803438
-##  2 Algeria    Africa  1957  45.685 10270856  3013.976      8.011015
-##  3 Algeria    Africa  1962  48.303 11000948  2550.817      7.844169
-##  4 Algeria    Africa  1967  51.407 12760499  3246.992      8.085484
-##  5 Algeria    Africa  1972  54.518 14760787  4182.664      8.338704
-##  6 Algeria    Africa  1977  58.014 17152804  4910.417      8.499114
-##  7 Algeria    Africa  1982  61.368 20033753  5745.160      8.656113
-##  8 Algeria    Africa  1987  65.799 23254956  5681.359      8.644946
-##  9 Algeria    Africa  1992  67.744 26298373  5023.217      8.521826
-## 10 Algeria    Africa  1997  69.152 29072015  4797.295      8.475808
+##    <chr>   <chr>     <int>   <dbl>    <int>     <dbl>         <dbl>
+##  1 Algeria Africa     1952    43.1  9279525     2449.          7.80
+##  2 Algeria Africa     1957    45.7 10270856     3014.          8.01
+##  3 Algeria Africa     1962    48.3 11000948     2551.          7.84
+##  4 Algeria Africa     1967    51.4 12760499     3247.          8.09
+##  5 Algeria Africa     1972    54.5 14760787     4183.          8.34
+##  6 Algeria Africa     1977    58.0 17152804     4910.          8.50
+##  7 Algeria Africa     1982    61.4 20033753     5745.          8.66
+##  8 Algeria Africa     1987    65.8 23254956     5681.          8.64
+##  9 Algeria Africa     1992    67.7 26298373     5023.          8.52
+## 10 Algeria Africa     1997    69.2 29072015     4797.          8.48
 ## # ... with 614 more rows
 ```
 Note that in this case you need a key of two variables to uniquely identify a row -- `country` and `year`
