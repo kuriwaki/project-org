@@ -20,12 +20,12 @@ library(glue)
 >                      --- Gentzkow and Shapiro (2014)
 
 
-This brief memo outlines one way to organize a data analysis project in policy analysis or the social sciences -- an area that is increasingly data-driven, code-driven, and collaborative. Many of the principles I describe are taken verbatim from the write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf), which I recommend. 
+This memo outlines one way to organize a data analysis-oriented project in policy research or social sciences -- an area that is increasingly data-driven, code-driven, and collaborative. Many of the principles I describe are taken verbatim from the write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf), which I recommend. 
 
 
 ## Motivation
 
-Learning how to write on new apps may sound like a hobby that "just" makes things look nice (as the opening quote indicates). But good organization and the use of appropriate tools improve the quality of your work, and more prominently, reduce the number of errors you make.
+Learning how to write on new apps may sound like an issue of taste that just makes things look nice (as the opening quote indicates). But good organization and the use of appropriate tools improve the quality of your work, and more importantly, reduce the number of errors you make.
 
 All the more so given recent trends:
 
@@ -33,7 +33,7 @@ All the more so given recent trends:
 - Many data analysis and version control tools becoming __open source__
 - Online __collaboration__ becoming more prevalent
 
-With these challenges come new tools to pick up. Learning these tricks is an investment, but a little training on well-tested best practices can go a long way.
+With these challenges come demands for new tools.  Learning these tricks is an investment, but a little training on well-tested best practices goes a long way.
 
 
 ## Original Gentzkow and Shapiro
