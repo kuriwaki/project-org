@@ -77,18 +77,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <blockquote>
 <p>“Saying [social science researchers] should spend more time thinking about the way they write code would be like telling a novelist that she should spend more time thinking about how best to use Microsoft Word. …. This manual began with a growing sense that our own version of this self-taught seat-of-the-pants approach to computing was hitting its limits.” — Gentzkow and Shapiro (2014)</p>
 </blockquote>
-<p>This brief memo outlines one way to organize an empirical project in policy analysis or the social science – AN area that is increasingly data-driven, code-driven, and collaborative. I rely most on the excellent 2014 write-up by economists Matthew Gentzkow and Jesse Shapiro, <a href="https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf">“Code and Data for the Social Sciences: A Practitioner’s Guide”</a>. Many of the principles I describe are taken verbatim from that paper. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.</p>
+<p>This brief memo outlines one way to organize a data analysis project in policy analysis or the social sciences – an area that is increasingly data-driven, code-driven, and collaborative. Many of the principles I describe are taken verbatim from the write-up by economists Matthew Gentzkow and Jesse Shapiro, <a href="https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf">“Code and Data for the Social Sciences: A Practitioner’s Guide”</a>, which I recommend.</p>
 <div id="motivation" class="section level2">
 <h2>Motivation</h2>
-<p>Learning how to write on new apps may sound like a hobby that “just” makes things look nice (as the opening quote indicates). But I would argue that good organization and the use of appropriate tools improve the quality of your work, and more prominently, reduce the number of errors you make, thereby optimizing your time.</p>
-<p>All the more so given how the research environment is changing:</p>
+<p>Learning how to write on new apps may sound like a hobby that “just” makes things look nice (as the opening quote indicates). But good organization and the use of appropriate tools improve the quality of your work, and more prominently, reduce the number of errors you make.</p>
+<p>All the more so given recent trends:</p>
 <ul>
 <li>Many organizations now handling <strong>more data</strong> at cheaper cost</li>
 <li>Many data analysis and version control tools becoming <strong>open source</strong></li>
 <li>Online <strong>collaboration</strong> becoming more prevalent</li>
 </ul>
-<p>With these challenges come new tools to pick up.</p>
-<p>Learning these tricks is an investment, but a little training on well-tested best practices can go a long way.</p>
+<p>With these challenges come new tools to pick up. Learning these tricks is an investment, but a little training on well-tested best practices can go a long way.</p>
 </div>
 <div id="original-gentzkow-and-shapiro" class="section level2">
 <h2>Original Gentzkow and Shapiro</h2>
@@ -210,7 +209,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><em>4. Directory Structure</em></p>
 <blockquote>
 <ol style="list-style-type: lower-roman">
-<li>Make a project directory</li>
+<li>Make a shared project directory</li>
 <li>Separate directories by function</li>
 <li>Separate files into inputs and outputs</li>
 <li>Separate and number scripts within directories by function</li>
@@ -227,8 +226,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <blockquote>
 <ol style="list-style-type: lower-roman">
 <li>Manage tasks with a task management system.</li>
-<li>E-mail is not (the best) task management system.</li>
-<li>Use a version control system</li>
+<li>E-mail is not “the best”&quot; task management system.</li>
+<li>Consider using a version control system</li>
 <li>Consider going all open-source.</li>
 </ol>
 </blockquote>
@@ -236,7 +235,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><em>7. Software for Writing</em></p>
 <blockquote>
 <ol style="list-style-type: lower-roman">
-<li>Use an editor you have the most control over (preferably not WYSIWIG)</li>
+<li>Use an editor you have the most control over (consider non-WYSIWIG)</li>
 </ol>
 </blockquote>
 <p><em>8. Figures and Tables</em></p>
@@ -266,6 +265,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Use a consistent font</li>
 </ol>
 </blockquote>
+<p>Below, I go through each of the main topics.</p>
 </div>
 <div id="automation" class="section level2">
 <h2>Automation</h2>
@@ -450,12 +450,12 @@ local elasticity <span class="kw">=</span> `percent_change_in_quantity<span clas
 <blockquote>
 <ol style="list-style-type: lower-roman">
 <li>Manage tasks with a task management system.</li>
-<li>E-mail is not (the best) task management system.</li>
-<li>Use a version control system</li>
+<li>E-mail is not the best task management system.</li>
+<li>Consider using a version control system.</li>
 <li>Consider going all open-source.</li>
 </ol>
 </blockquote>
-<p>``E-mail is not a task management system’’. There are plenty of Apps now that allow you to tag individuals with tasks, making individual responsibilities clear. Just to name a few: Asana, Slack, Dropbox Paper, Basecamp, Google Docs, …</p>
+<p>``E-mail is not a task management system’’. There are plenty of Apps now that allow you to tag individuals with tasks, making individual responsibilities clear. e.g., Dropbox, Google Docs, Google Tasks, Slack, Asana/Basecamp …</p>
 <p>A version control system, typically on Github, is a great way to keep track of your files without being overloaded with versions and versions of confusingly named files. This may be an advanced topic for an introduction to data analysis, but tutorials like <a href="https://try.github.io/" class="uri">https://try.github.io/</a> is a good start, and learning as you go is a valuable skill-set.</p>
 <p>Data analytics – both the datasets and the programs and functions that analyze them – is increasingly open source. Posting your own code and findings on the public web is daunting at first, but it has a couple of benefits. Primarily, you learn how to code and analyze data through the best possible ways – seeing others more advanced than you actually write code for the same type of problems.</p>
 <p>For example, see a version of the Directory Screenshot I posted at the Github page: <a href="https://github.com/kuriwaki/poll_error" class="uri">https://github.com/kuriwaki/poll_error</a></p>
@@ -464,7 +464,7 @@ local elasticity <span class="kw">=</span> `percent_change_in_quantity<span clas
 <h2>Software for Writing</h2>
 <blockquote>
 <ol style="list-style-type: lower-roman">
-<li>Use an editor you have the most control over (preferably not WYSIWIG)</li>
+<li>Use an editor you have the most control over (consider non-WYSIWIG)</li>
 </ol>
 </blockquote>
 <p>WYSIWIG stands for “What you see is what you get”, and software like Microsoft Office and Google Docs fall in this category. A non-WYSIWIG editor requires you to explicitly control your formatting (such as boldface, font size, margin size, Figure placement, captioning, etc..), often in plain-text. Plain text is just what it sounds like – text files that have no formatting in them. Although they have different file extensions, <code>.Rmd</code>, <code>.do</code>, <code>.R</code>, is plain text.</p>
@@ -511,20 +511,7 @@ local elasticity <span class="kw">=</span> `percent_change_in_quantity<span clas
 
 </div>
 <p>and packages such as R’s <code>stargazer</code> format regressions nicely with a couple of customizable options.</p>
-<p>For example, reading an online dataset on cancer cells,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## setup for reading in file
-measures &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;radius&quot;</span>, <span class="st">&quot;texture&quot;</span>, <span class="st">&quot;perimeter&quot;</span>,
-              <span class="st">&quot;area&quot;</span>, <span class="st">&quot;smooth&quot;</span>, <span class="st">&quot;compact&quot;</span>,
-              <span class="st">&quot;concav&quot;</span>, <span class="st">&quot;concav_points&quot;</span>, <span class="st">&quot;symmetry&quot;</span>, <span class="st">&quot;fractal&quot;</span>)
-measures_<span class="dv">30</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">glue</span>(<span class="st">&quot;{measures}&quot;</span>), 
-                 <span class="kw">glue</span>(<span class="st">&quot;{measures}_se&quot;</span>), 
-                 <span class="kw">glue</span>(<span class="st">&quot;{measures}_worst&quot;</span>))
-bc_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;diagnosis&quot;</span>, measures_<span class="dv">30</span>)
-
-## read breast cancer data 
-urlfile &lt;-<span class="st">'http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data'</span>
-bc &lt;-<span class="st"> </span><span class="kw">read_csv</span>(urlfile, <span class="dt">col_names =</span> bc_names, <span class="dt">col_types =</span> <span class="kw">cols</span>())</code></pre></div>
-<p>And predicting if they are malignant,</p>
+<p>For example, reading an online dataset on breast cancer cells (<code>bc</code>), and predicting if they are malignant,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bc<span class="op">$</span>malignant &lt;-<span class="st"> </span>bc<span class="op">$</span>diagnosis <span class="op">==</span><span class="st"> &quot;M&quot;</span>
 fit_bc &lt;-<span class="st"> </span><span class="kw">lm</span>(malignant <span class="op">~</span><span class="st"> </span>radius <span class="op">+</span><span class="st"> </span>texture <span class="op">+</span><span class="st"> </span>perimeter <span class="op">+</span><span class="st"> </span>smooth <span class="op">+</span><span class="st"> </span>symmetry, bc)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stargazer)

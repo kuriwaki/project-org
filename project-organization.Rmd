@@ -20,22 +20,20 @@ library(glue)
 >                      --- Gentzkow and Shapiro (2014)
 
 
-This brief memo outlines one way to organize an empirical project in policy analysis or the social science -- AN area that is increasingly data-driven, code-driven, and collaborative. I rely most on the excellent 2014 write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf). Many of the principles I describe are taken verbatim from that paper. My intent is to summarize the key points and update with new resources, rather than re-invent the wheel.
+This brief memo outlines one way to organize a data analysis project in policy analysis or the social sciences -- an area that is increasingly data-driven, code-driven, and collaborative. Many of the principles I describe are taken verbatim from the write-up by economists Matthew Gentzkow and Jesse Shapiro, ["Code and Data for the Social Sciences: A Practitioner’s Guide"](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf), which I recommend. 
 
 
 ## Motivation
 
-Learning how to write on new apps may sound like a hobby that "just" makes things look nice (as the opening quote indicates). But I would argue that good organization and the use of appropriate tools improve the quality of your work, and more prominently, reduce the number of errors you make, thereby optimizing your time.
+Learning how to write on new apps may sound like a hobby that "just" makes things look nice (as the opening quote indicates). But good organization and the use of appropriate tools improve the quality of your work, and more prominently, reduce the number of errors you make.
 
-All the more so given how the research environment is changing:
+All the more so given recent trends:
 
 - Many organizations now handling __more data__ at cheaper cost
 - Many data analysis and version control tools becoming __open source__
 - Online __collaboration__ becoming more prevalent
 
-With these challenges come new tools to pick up.
-
-Learning these tricks is an investment, but a little training on well-tested best practices can go a long way.
+With these challenges come new tools to pick up. Learning these tricks is an investment, but a little training on well-tested best practices can go a long way.
 
 
 ## Original Gentzkow and Shapiro
@@ -126,10 +124,10 @@ __Organization__
 
 _4. Directory Structure_
 
-> i) Make a project directory
+> i) Make a shared project directory
   ii) Separate directories by function
-   iii) Separate files into inputs and outputs
-   iv) Separate and number scripts within directories by function
+  iii) Separate files into inputs and outputs
+  iv) Separate and number scripts within directories by function
    v) Make directories portable
    
 _5. Datasets_
@@ -139,8 +137,8 @@ _5. Datasets_
 _6. Task and Version Management_
 
 > i) Manage tasks with a task management system.
-   ii) E-mail is not (the best) task management system.
-   iii) Use a version control system
+   ii) E-mail is not "the best"" task management system.
+   iii) Consider using a version control system
    iv) Consider going all open-source.
 
 
@@ -148,7 +146,7 @@ __Production__
 
 _7. Software for Writing_
 
-> i) Use an editor you have the most control over (preferably not WYSIWIG)
+> i) Use an editor you have the most control over (consider non-WYSIWIG)
 
 _8. Figures and Tables_
 
@@ -172,6 +170,7 @@ _10. Typesetting_
    ii) Use a consistent font
 
 
+Below, I go through each of the main topics.
 
 ## Automation
 
@@ -405,11 +404,11 @@ Large corporate and government databases are organized in this way too -- each e
 ## Task and Version Management
 
 > i) Manage tasks with a task management system.
-   ii) E-mail is not (the best) task management system.
-   iii) Use a version control system
+   ii) E-mail is not the best task management system.
+   iii) Consider using a version control system.
    iv) Consider going all open-source.
 
-``E-mail is not a task management system''. There are plenty of Apps now that allow you to tag individuals with tasks, making individual responsibilities clear. Just to name a few: Asana, Slack, Dropbox Paper, Basecamp, Google Docs, ...
+``E-mail is not a task management system''. There are plenty of Apps now that allow you to tag individuals with tasks, making individual responsibilities clear. e.g., Dropbox, Google Docs, Google Tasks, Slack, Asana/Basecamp ...
 
 
 A version control system, typically on Github, is a great way to keep track of your files without being overloaded with versions and versions of confusingly named files. This may be an advanced topic for an introduction to data analysis, but tutorials like https://try.github.io/ is a good start, and learning as you go is a valuable skill-set.
@@ -422,7 +421,7 @@ For example, see a version of the Directory Screenshot I posted at the Github pa
 
 ##  Software for Writing
 
-> i) Use an editor you have the most control over (preferably not WYSIWIG)
+> i) Use an editor you have the most control over (consider non-WYSIWIG)
    
 WYSIWIG stands for "What you see is what you get", and software like Microsoft Office and Google Docs fall in this category. A non-WYSIWIG editor requires you to explicitly control your formatting (such as boldface, font size, margin size, Figure placement, captioning, etc..), often in plain-text. Plain text is just what it sounds like -- text files that have no formatting in them. Although they have different file extensions, `.Rmd`, `.do`, `.R`, is plain text.
 
@@ -504,9 +503,9 @@ in Stata changes the color scheme from the jarring blue-olive-green-white to a c
 
 and packages such as R's `stargazer` format regressions nicely with a couple of customizable options.
 
-For example, reading an online dataset on cancer cells, 
+For example, reading an online dataset on breast cancer cells (`bc`),  and predicting if they are malignant,
 
-```{r, message=FALSE}
+```{r, message=FALSE, include = FALSE}
 
 ## setup for reading in file
 measures <- c("radius", "texture", "perimeter",
@@ -518,11 +517,10 @@ measures_30 <- c(glue("{measures}"),
 bc_names <- c("id", "diagnosis", measures_30)
 
 ## read breast cancer data 
-urlfile <-'http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data'
+urlfile <- "http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data"
 bc <- read_csv(urlfile, col_names = bc_names, col_types = cols())
 ```
 
-And predicting if they are malignant,
 ```{r}
 bc$malignant <- bc$diagnosis == "M"
 fit_bc <- lm(malignant ~ radius + texture + perimeter + smooth + symmetry, bc)
@@ -589,7 +587,6 @@ It's also good to stick to a consistent way of referring to dates in your file n
    
 > i) Use generous margins
    ii) Use a consistent font
-
 
 
 ## Conclusion
